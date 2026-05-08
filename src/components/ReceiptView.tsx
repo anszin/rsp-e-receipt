@@ -8,7 +8,7 @@ const FONT = "'GulimChe', 'Gulim', 'DotumChe', monospace"
 
 function ReceiptPaper({ lines, title }: { lines: EjLine[]; title?: string }) {
   return (
-    <div className="bg-white shadow-md w-full"
+    <div className="bg-white shadow-sm w-full"
       style={{ fontFamily: FONT, fontSize: 13, lineHeight: 1.6 }}
     >
       {title && (
