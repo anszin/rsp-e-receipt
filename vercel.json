@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/receipt.ts": {
+      "includeFiles": "sample/recv.json"
+    }
+  }
+}

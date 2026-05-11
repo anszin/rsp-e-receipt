@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { decryptToken } from '../lib/token'
+import { decryptToken } from './_token'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 

@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { encryptToken } from '../lib/token'
+import { encryptToken } from './_token'
 
 const TOKEN_SECRET = process.env.JWT_SECRET ?? 'dev-secret-change-in-production'
 
