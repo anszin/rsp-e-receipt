@@ -42,7 +42,7 @@ export default function QrPage() {
         )}
         {qrUrl && (
           <>
-            <QRCodeSVG value={qrUrl} size={220} level="M" />
+            <QRCodeSVG value={qrUrl} size={220} level="L" />
             <div className="text-[11px] text-gray-400 text-center break-all max-w-xs">
               {qrUrl}
             </div>
