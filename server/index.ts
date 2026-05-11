@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
-import { encryptToken, decryptToken } from '../api/_token'
+import { encryptToken, decryptToken } from '../lib/token'
 
 dotenv.config()
 
