@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import jwt from 'jsonwebtoken'
+import { encryptToken } from '../lib/token'
 
-const JWT_SECRET = process.env.JWT_SECRET ?? 'dev-secret-change-in-production'
+const TOKEN_SECRET = process.env.JWT_SECRET ?? 'dev-secret-change-in-production'
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -16,6 +16,6 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  const token = jwt.sign({ saleDt, strCd, posNo, tranNo }, JWT_SECRET, { expiresIn: '90d' })
+  const token = encryptToken({ saleDt, strCd, posNo, tranNo }, TOKEN_SECRET)
   res.json({ token })
 }

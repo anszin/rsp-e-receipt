@@ -1,10 +1,10 @@
 import express from 'express'
-import jwt from 'jsonwebtoken'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+import { encryptToken, decryptToken } from '../lib/token'
 
 dotenv.config()
 
@@ -13,7 +13,7 @@ const __dirname = dirname(__filename)
 
 const app = express()
 const PORT = Number(process.env.PORT) || 3001
-const JWT_SECRET = process.env.JWT_SECRET ?? 'dev-secret-change-in-production'
+const TOKEN_SECRET = process.env.JWT_SECRET ?? 'dev-secret-change-in-production'
 
 app.use(cors())
 app.use(express.json())
@@ -27,7 +27,7 @@ app.post('/api/qr-token', (req, res) => {
     return
   }
 
-  const token = jwt.sign({ saleDt, strCd, posNo, tranNo }, JWT_SECRET, { expiresIn: '90d' })
+  const token = encryptToken({ saleDt, strCd, posNo, tranNo }, TOKEN_SECRET)
   res.json({ token })
 })
 
@@ -41,16 +41,9 @@ app.get('/api/receipt', (req, res) => {
   }
 
   try {
-    // JWT 검증 → 4개 값 추출 (위변조 불가)
-    jwt.verify(token, JWT_SECRET) as {
-      saleDt: string; strCd: string; posNo: string; tranNo: string
-    }
+    decryptToken(token, TOKEN_SECRET)
 
     // TODO: 실제 영수증 API 호출
-    // const { saleDt, strCd, posNo, tranNo } = payload
-    // const data = await fetch(`${process.env.RECEIPT_API_URL}?saleDt=${saleDt}&strCd=${strCd}&posNo=${posNo}&tranNo=${tranNo}`)
-
-    // 현재: 샘플 데이터 반환
     const samplePath = join(__dirname, '../sample/recv.json')
     const data = JSON.parse(readFileSync(samplePath, 'utf-8'))
     res.json(data)

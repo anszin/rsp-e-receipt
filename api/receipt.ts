@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import jwt from 'jsonwebtoken'
+import { decryptToken } from '../lib/token'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
-const JWT_SECRET = process.env.JWT_SECRET ?? 'dev-secret-change-in-production'
+const TOKEN_SECRET = process.env.JWT_SECRET ?? 'dev-secret-change-in-production'
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
@@ -19,12 +19,11 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    // JWT 검증 → 위변조된 토큰은 여기서 차단
-    jwt.verify(token, JWT_SECRET)
+    // AES-256-GCM 복호화 → 위변조/만료 토큰 차단
+    decryptToken(token, TOKEN_SECRET)
 
     // TODO: 실제 영수증 API 호출
     // const { saleDt, strCd, posNo, tranNo } = payload
-    // const data = await fetch(`${process.env.RECEIPT_API_URL}?saleDt=...`)
 
     const data = JSON.parse(readFileSync(join(process.cwd(), 'sample/recv.json'), 'utf-8'))
     res.json(data)
